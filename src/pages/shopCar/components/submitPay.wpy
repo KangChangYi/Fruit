@@ -1,0 +1,82 @@
+<style lang="less" scoped>
+  .submit-pay-layout {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    font-size: 13px;
+  }
+  .radio-layout {
+    padding-left: 40rpx;
+  }
+  .custom-class {
+    background: black !important;
+  }
+  .button-class {
+    color: black !important;
+  }
+</style>
+
+<template>
+  <view class="submit-pay-layout">
+    <van-submit-bar price="{{ price }}" button-type="primary" button-text="提交订单" bind:submit="onClickSubmit" tip="{{ true }}">
+      <van-radio class="radio-layout" name="1" value="{{value}}" bind:change="clickRadio">全选</van-radio>
+    </van-submit-bar>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    components = {};
+    data = {
+      value: '0',
+      price: 0
+    };
+    methods = {
+      clickRadio(name) {
+        if (this.value === '0') {
+          this.value = '1'
+          this.$emit('allSelect', true)
+        } else {
+          this.value = '0'
+          this.$emit('allSelect', false)
+        }
+      },
+      onClickSubmit() {
+        console.log('点击了提交订单')
+        console.log(this.price)
+      }
+    };
+    computed = {};
+    events = {
+      // 父组件触发事件
+      reShowSumPrice(itemPriceList) {
+        const LIST = itemPriceList
+        let sum = 0
+        for (let i in LIST) {
+          if (LIST[i].state) {
+            sum += LIST[i].price
+          }
+        }
+        this.price = sum
+        if (LIST.length !== 0) {
+          this.isHasItemSelected(LIST)
+        } else {
+          this.value = '0'
+        }
+      }
+    };
+    // 所有商品选中情况
+    isHasItemSelected(LIST) {
+      if (LIST.every(LIST => {
+        return LIST.state === true
+      })) {
+        this.value = '1'
+      } else {
+        this.value = '0'
+      }
+    }
+    onLoad() {}
+  }
+</script>

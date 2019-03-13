@@ -1,0 +1,46 @@
+<style lang="less">
+  .swiper {
+    margin-top:10rpx;
+    height: 400rpx;
+    width: 100%;
+  }
+  .swiper-image {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+<template>
+  <swiper class="swiper" indicator-dots="{{indicatorDots}}" indicator-color="{{indicatorColor}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
+    <repeat for="{{imgUrls}}" key="index" index="index" item="item">
+      <swiper-item>
+        <!-- <view> {{imgUrls}}</view> -->
+        <image src="{{item}}" class="swiper-image" />
+      </swiper-item>
+    </repeat>
+  </swiper>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.component {
+    components = {};
+    data = {
+      imgUrls: [
+        '/images/index/swiper2.jpg',
+        '/images/index/swiper3.jpg',
+        '/images/index/swiper1.jpg'
+      ],
+      indicatorColor: '#f3f3f3',
+      indicatorDots: true,
+      autoplay: true,
+      interval: 3000,
+      duration: 1500
+    };
+    computed = {};
+    methods = {};
+    events = {};
+    onLoad() {
+      // console.log(this.$parent)
+    }
+  }
+</script>

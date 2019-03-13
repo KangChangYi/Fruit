@@ -1,0 +1,112 @@
+<style lang="less" scoped>
+  @1: rgb(142, 155, 198);
+  @light-1: @1 - #111;
+  @2: rgb(170, 207, 151);
+  @light-2: @2 - #111;
+  @3: rgb(244, 218, 143);
+  @light-3: @3 - #111;
+  @4: rgb(233, 155, 188);
+  @light-4: @4 - #111;
+  @5: rgb(234, 155, 173);
+  @light-5: @5 - #111;
+  #one {
+    background: @1;
+    border-bottom: 4px @light-1 solid;
+    border-right: 4px @light-1 solid;
+    &:active {
+      background: @light-1;
+    }
+  }
+  #two {
+    background: @2;
+    border-bottom: 4px @light-2 solid;
+    border-right: 4px @light-2 solid;
+    &:active {
+      background: @light-2;
+    }
+  }
+  #three {
+    background: @3;
+    border-bottom: 4px @light-3 solid;
+    border-right: 4px @light-3 solid;
+    &:active {
+      background: @light-3;
+    }
+  }
+  #four {
+    background: @4;
+    border-bottom: 4px @light-4 solid;
+    border-right: 4px @light-4 solid;
+    &:active {
+      background: @light-4;
+    }
+  }
+  #five {
+    background: @5;
+    border-bottom: 4px @light-5 solid;
+    border-right: 4px @light-5 solid;
+    &:active {
+      background: @light-5;
+    }
+  }
+  .dictionary-layout {
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+  .dictionary-box {
+    display: flex;
+    align-items: center;
+    height: 31%;
+    margin: 0 20rpx 0 20rpx;
+  }
+  .fruit-type {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 5rpx;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 88.5%;
+    flex: 1;
+    margin: 0 10px 0 10px;
+    border-radius: 7px;
+  }
+</style>
+
+<template>
+  <view class="dictionary-layout">
+    <view class="dictionary-box">
+      <view class="fruit-type" id="one">浆果类</view>
+      <view class="fruit-type" id="two">瓜果类</view>
+    </view>
+    <view class="dictionary-box">
+      <view class="fruit-type" id="three">柑果类</view>
+      <view class="fruit-type" id="four">核果类</view>
+    </view>
+    <view class="dictionary-box">
+      <view class="fruit-type" id="five">仁果类</view>
+      <view style="margin: 0 10px 0 10px;background:white;flex: 1"></view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '水果百科',
+      usingComponents: {
+        // 'van-button': '/components/vant-weapp/button/index'
+      }
+    }
+    components = {}
+    methods = {}
+    data = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>

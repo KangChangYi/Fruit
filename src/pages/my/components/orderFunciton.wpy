@@ -1,0 +1,68 @@
+<style lang="less" scoped>
+  .orderFunctionLayout {
+    margin-top: 35rpx;
+    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.1);
+  }
+  .order-layout {
+    display: flex;
+    font-size: 13px;
+    color: #657180;
+    width: 100%;
+  }
+  .icon-layout {
+    background: white;
+    text-align: center;
+    padding: 25rpx;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .icon-layout:active {
+    background: #f3f3f3;
+  }
+  .icon {
+    width: 58rpx;
+    height: 58rpx;
+    margin-bottom: 10rpx;
+  }
+</style>
+<template>
+  <view class="orderFunctionLayout">
+    <van-cell @tap="goToOrder" title="全部订单" value="查看全部订单" is-link></van-cell>
+    <view class="order-layout">
+      <view @tap="goToOrder" class="icon-layout">
+        <image src="../../../images/my/wait-pay.png" class="icon" />待付款
+      </view>
+      <view @tap="goToOrder" class="icon-layout">
+        <image src="../../../images/my/wait-get.png" class="icon" />待发货
+      </view>
+      <view @tap="goToOrder" class="icon-layout">
+        <image src="../../../images/my/wait-take.png" class="icon" style="width:55rpx;height:55rpx" />待收货
+      </view>
+      <view @tap="goToOrder" class="icon-layout">
+        <image src="../../../images/my/wait-evaluate.png" class="icon" style="width:55rpx;height:55rpx" />待评价
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    config = {};
+    components = {};
+    methods = {
+      goToOrder() {
+        wepy.navigateTo({
+          url: 'order/order'
+        })
+      }
+    };
+    data = {};
+    computed = {};
+    events = {};
+    onLoad() {}
+  }
+</script>

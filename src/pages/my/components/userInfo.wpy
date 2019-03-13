@@ -1,0 +1,86 @@
+<style lang="less" scoped>
+  .userInfo-layout {
+    flex: 1;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    padding: 35rpx 0 20rpx 40rpx;
+  }
+  .info-modify-layout {
+    padding: 35rpx 40rpx 0 0;
+    flex: 1;
+  }
+  .userAvatar {
+    border-radius: 50%;
+    margin-right: 30rpx;
+    display: flex;
+    overflow: hidden;
+    width: 200rpx;
+    height: 200rpx;
+  }
+  .userInfo-name-city-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  .userNickname {
+    font-size: 17px;
+  }
+  .userCity {
+    margin-top: 5rpx;
+    font-size: 13px;
+    color: #657180;
+  }
+  .Info-logo {
+    width: 110rpx;
+    height: 110rpx;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    image {
+      width: 60rpx;
+      height: 60rpx;
+    }
+  }
+  .Info-logo:active {
+    background: #f3f3f3;
+  }
+</style>
+
+<template>
+  <view style="display: flex;">
+    <view class="userInfo-layout">
+      <open-data class="userAvatar" type="userAvatarUrl"> </open-data>
+      <view class="userInfo-name-city-layout">
+        <open-data class="userNickname" type="userNickName" lang="zh_CN"></open-data>
+        <open-data class="userCity" type="userCity" lang="zh_CN"></open-data>
+      </view>
+    </view>
+    <view class="info-modify-layout">
+      <view class="Info-logo" @tap="goToInfoModify">
+        <image src="../../../images/my/info-logo.png" />
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    config = {};
+    components = {};
+    methods = {
+      goToInfoModify() {
+        wepy.navigateTo({
+          url: 'infoModify/infoModify'
+        })
+      }
+    };
+    data = {};
+    computed = {};
+    events = {};
+    onLoad() {}
+  }
+</script>

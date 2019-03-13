@@ -1,0 +1,39 @@
+<style lang="less" scoped>
+
+</style>
+<template>
+  <view style="margin-top:35rpx">
+    <van-cell title="收货地址" @tap="goAddress" is-link/>
+    <van-cell title="我的活动" @tap="goActivity" is-link/>
+    <!-- <van-cell title="单元格" is-link/> -->
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    config = {
+      usingComponents: {
+        'van-icon': '/components/vant-weapp/icon/index'
+      }
+    };
+    components = {};
+    data = { };
+    methods = {
+      goAddress() {
+        wepy.navigateTo({
+          url: 'address/address'
+        })
+      },
+      goActivity() {
+        wepy.navigateTo({
+          url: 'activity/activity'
+        })
+      }
+    };
+
+    computed = {};
+    events = {};
+    onLoad() { }
+  }
+</script>

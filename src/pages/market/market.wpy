@@ -1,0 +1,49 @@
+<style lang="less" scoped>
+  .market-layout {
+    height: 100vh;
+  }
+</style>
+
+<template>
+  <view class="market-layout">
+    <searchMarket></searchMarket>
+    <commodityList></commodityList>
+    <Dividing></Dividing>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import searchMarket from './components/searchMarket'
+  import commodityList from './components/commodityList'
+  import Dividing from '../../components/Dividing'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '水果商城',
+      usingComponents: {
+        'van-search': '/components/vant-weapp/search/index',
+        'van-button': '/components/vant-weapp/button/index'
+      }
+    }
+    components = {
+      searchMarket,
+      commodityList,
+      Dividing
+    }
+    data = {
+    }
+    methods = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+    onShow() {
+      const global = this.$parent.globalData
+      wepy.getStorage({
+        key: 'shopCar',
+        success(res) {
+          global.shopCar = res.data
+        }
+      })
+    }
+  }
+</script>

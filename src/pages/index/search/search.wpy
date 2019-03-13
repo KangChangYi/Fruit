@@ -1,0 +1,22 @@
+<style lang="less" scoped>
+
+</style>
+
+<template>
+  <view>搜索</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '搜索'
+    }
+    components = {}
+    methods = {}
+    data = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>

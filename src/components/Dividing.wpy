@@ -1,0 +1,25 @@
+<style lang="less" scoped>
+  .diver {
+    border-bottom: 1px #f3f3f3 solid;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+</style>
+
+<template>
+  <view class="diver">
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    methods = {};
+    data = {};
+    computed = {};
+    events = {};
+    onLoad() {}
+  }
+</script>

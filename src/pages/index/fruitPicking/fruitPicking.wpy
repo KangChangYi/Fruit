@@ -1,0 +1,26 @@
+<style lang="less" scoped>
+
+</style>
+
+<template>
+  <view>
+    采摘活动</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '采摘活动',
+      usingComponents: {
+        // 'van-button': '/components/vant-weapp/button/index'
+      }
+    }
+    components = {}
+    methods = {}
+    data = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>

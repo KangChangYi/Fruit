@@ -1,0 +1,229 @@
+<style lang="less" scoped>
+  .layout {
+    background: #f5f5f5;
+    color: #464c5b;
+    width: 100%;
+    height: 100vh;
+  }
+  .cell {
+    margin-bottom: 1px;
+    align-items: center;
+    display: flex;
+    height: 100rpx;
+    padding-left: 40rpx;
+    background: white;
+    font-size: 13px;
+  }
+  .save-info {
+    width: 90%;
+    margin-top: 40rpx;
+    height: 90rpx;
+    border-radius: 5px;
+    background: #20716a;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    &:active {
+      background: #278b83;
+    }
+  }
+  .delete-info {
+    width: 90%;
+    margin-top: 40rpx;
+    height: 90rpx;
+    border-radius: 5px;
+    background: #f53939;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    &:active {
+      background: #ff4949;
+    }
+  }
+  .infoframe {
+    flex: 3.5;
+    padding-left: 10rpx;
+  }
+  .font {
+    flex: 1;
+  }
+</style>
+
+<template>
+  <view>
+    <view class="layout">
+      <view class="cell">
+        <view class="font"><text space="nbsp">联 系 人</text></view>
+        <view class="infoframe">
+          <input placeholder="姓名" value="{{name}}" bindinput="inputName" />
+        </view>
+      </view>
+      <view class="cell" style="margin-bottom:15rpx;">
+        <view class="font"></view>
+        <view class="infoframe" style="padding-left:0">
+          <radio-group bindchange="changeRadio">
+            <radio color="#20716a" style="transform:scale(0.7);" value="男士" checked="{{male}}" />男士
+            <radio color="#20716a" style="transform:scale(0.7);" value="女士" checked="{{female}}" />女士
+          </radio-group>
+        </view>
+      </view>
+      <view class="cell">
+        <view class="font"><text space="emsp">电  话</text></view>
+        <view class="infoframe">
+          <input type="number" value="{{telPhone}}" placeholder="手机号码" bindinput="inputTelPhone" />
+        </view>
+      </view>
+      <view class="cell">
+        <view class="font"><text space="emsp">城  市</text></view>
+        <view class="infoframe">
+          <view @tap="showPopup" style="height:70rpx;display:flex;align-items:center;">{{cityValue}}</view>
+        </view>
+      </view>
+      <!-- 弹出层 -->
+      <van-popup show="{{ show }}" position="bottom" bind:close="closePopup">
+        <van-area area-list="{{ areaList }}" bind:confirm="changeCity" bind:cancel="closePopup" value="330600" />
+      </van-popup>
+      <!-- 弹出层 -->
+      <view class="cell" style="height:150rpx;">
+        <view class="font">详细地址</view>
+        <view class="infoframe">
+          <textarea bindinput="inputDetailAddress" value="{{detailAddress}}" placeholder="如地点、小区、楼栋号、单元室等" placeholder-style="color:#ababab" style="width:90%;" maxlength="50" auto-height/>
+        </view>
+      </view>
+      <view class="cell" style="height:150rpx;">
+        <view class="font">默认地址</view>
+        <view class="infoframe">
+          <van-switch checked="{{ isSwitchChecked }}" active-color="#20716a" bind:change="changeDefaultAddress" />
+        </view>
+      </view>
+      <button class="save-info" @tap="saveInfo">{{Nature}}</button>
+      <button wx:if="{{Nature==='修改'}}" class="delete-info" @tap="deleteInfo">删除</button>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    components = {}
+    data = {
+      // 表单值
+      name: '',
+      gender: '',
+      telPhone: '',
+      cityValue: '省 市 区',
+      detailAddress: '',
+      // 是否选中开关
+      isSwitchChecked: false,
+      // popup显示
+      show: false,
+      // 省市区对象
+      areaList: {},
+      // 性别选中情况
+      male: false,
+      female: false
+    };
+    props = {
+      Nature: String
+    };
+    methods = {
+      // 保存信息
+      saveInfo() {
+        const ADDRESSINFO = {
+          name: this.name,
+          gender: this.gender,
+          telPhone: this.telPhone,
+          cityValue: this.cityValue,
+          detailAddress: this.detailAddress,
+          isSwitchChecked: this.isSwitchChecked
+        }
+        if (this.mustFill(ADDRESSINFO)) {
+          this.$emit('saveAddressInfo', ADDRESSINFO)
+        } else {
+          wx.showToast({
+            title: '请输入完整数据',
+            icon: 'none',
+            duration: 1500
+          })
+        }
+      },
+      // 删除信息
+      deleteInfo() {
+        this.$emit('deleteAddressInfo')
+      },
+      inputName(e) {
+        this.name = e.detail.value
+      },
+      inputTelPhone(e) {
+        this.telPhone = e.detail.value
+      },
+      inputDetailAddress(e) {
+        this.detailAddress = e.detail.value
+      },
+      changeRadio(e) {
+        this.gender = e.detail.value
+      },
+      changeCity(e) {
+        let value = e.detail.values
+        this.cityValue = value[0].name + ' ' + value[1].name + ' ' + value[2].name
+        this.show = false
+      },
+      showPopup() {
+        this.show = true
+      },
+      closePopup() {
+        this.show = false
+      },
+      changeDefaultAddress() {
+        this.isSwitchChecked = !this.isSwitchChecked
+      }
+    }
+    mustFill(value) {
+      let {
+        name,
+        gender,
+        telPhone,
+        cityValue,
+        detailAddress
+      } = value
+      if (name === '') {
+        return false
+      }
+      if (gender === '') {
+        return false
+      }
+      if (telPhone === '') {
+        return false
+      }
+      if (cityValue === '') {
+        return false
+      }
+      if (detailAddress === '') {
+        return false
+      }
+      return true
+    }
+    computed = {}
+    events = {}
+    onLoad() {
+      this.areaList = require('./addressList.js')
+      if (this.Nature === '修改') {
+        this.assignment(this.$parent.addressInfo)
+        this.$apply()
+      }
+    }
+    assignment(DATA) {
+      this.name = DATA.name
+      this.telPhone = DATA.telPhone
+      this.cityValue = DATA.cityValue
+      this.detailAddress = DATA.detailAddress
+      this.isSwitchChecked = DATA.isSwitchChecked
+      this.gender = DATA.gender
+      if (DATA.gender === '男士') {
+        this.male = true
+      } else {
+        this.female = true
+      }
+    }
+  }
+</script>

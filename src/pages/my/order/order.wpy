@@ -1,0 +1,170 @@
+<style lang="less" scoped>
+.displayCenter(@justify-content:center,@align-items:center) {
+    display: flex;
+    justify-content: @justify-content;
+    align-items: @align-items;
+}
+.order-layout {
+    background: #f3f4f6;
+    height: 100vh;
+    .content-box {
+        width: 100%;
+        height: fit-content;
+        .displayCenter();
+        flex-direction: column;
+        padding: 30rpx 0 30rpx 0;
+        #non-order-bg {
+            padding-top: 200rpx;
+            width: 300rpx;
+            height: 340rpx;
+        }
+    }
+}
+.order-box {
+    width: 92%;
+    height: 270rpx;
+    border-radius: 10px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
+    background: white;
+    margin-bottom: 30rpx;
+    padding: 15rpx 25rpx;
+    box-sizing: border-box;
+    font-size: 14px;
+    .displayCenter(@justify-content:space-between);
+    flex-direction: column;
+    // border: 1px red solid;
+    .order-header {
+        width: 100%;
+        // border: 1px red solid;
+        .displayCenter(@justify-content:space-between);
+        .order-id {
+            font-size: 14px;
+        }
+        .order-state {
+            color: rgb(255, 222, 75);
+        }
+    }
+    .order-image {
+        width: 100%;
+        // border: 1px red solid;
+        .displayCenter(@justify-content:flex-start);
+        #commodity-img {
+            width: 128rpx;
+            height: 128rpx;
+        }
+    }
+    .order-price-button {
+        width: 100%;
+        .displayCenter(@justify-content:flex-end);
+    }
+}
+</style>
+
+<template>
+    <view class="order-layout">
+        <van-tabs
+            sticky
+            active="{{ active }}"
+            bind:click="onClickTab"
+            color="#20716a"
+            swipe-threshold='5'
+        >
+            <van-tab title="全部">
+                <view class="content-box">
+                    <!-- <view>
+                        <image id="non-order-bg" src="../../../images/my/bg-order.png" />
+                    </view> -->
+                    <view class="order-box">
+                        <view class="order-header">
+                            <view class="order-id">订单编号：123311222132</view>
+                            <view class="order-state">待发货</view>
+                        </view>
+                        <view class="order-image">
+                            <image
+                                id="commodity-img"
+                                src='../../../images/global/fruits3.jpg'
+                            />
+                        </view>
+                        <view class="order-price-button">
+                            <view class="order-state">共1个商品 合计：￥40.4</view>
+                            <van-button
+                                type="default"
+                                size="small"
+                                style="margin-left:20rpx;"
+                            >确认收货</van-button>
+                        </view>
+                    </view>
+                </view>
+            </van-tab>
+            <van-tab title="待付款">
+                <view class="content-box">
+                    <view>
+                        <image
+                            id="non-order-bg"
+                            src="../../../images/my/bg-order.png"
+                        />
+                    </view>
+                </view>
+            </van-tab>
+            <van-tab title="待发货">
+                <view class="content-box">
+                    <view>
+                        <image
+                            id="non-order-bg"
+                            src="../../../images/my/bg-order.png"
+                        />
+                    </view>
+                </view>
+            </van-tab>
+            <van-tab title="待收货">
+                <view class="content-box">
+                    <view>
+                        <image
+                            id="non-order-bg"
+                            src="../../../images/my/bg-order.png"
+                        />
+                    </view>
+                </view>
+            </van-tab>
+            <van-tab title="待评价">
+                <view class="content-box">
+                    <view>
+                        <image
+                            id="non-order-bg"
+                            src="../../../images/my/bg-order.png"
+                        />
+                    </view>
+                </view>
+            </van-tab>
+        </van-tabs>
+
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class index extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的订单',
+    usingComponents: {
+      'van-tab': '/components/vant-weapp/tab/index',
+      'van-tabs': '/components/vant-weapp/tabs/index',
+      'van-button': '/components/vant-weapp/button/index'
+    }
+  };
+  data = {
+        // 当前选中tab的index
+    active: 0
+  };
+  components = {};
+  methods = {
+    onClickTab (event) {
+      this.active = event.detail.index
+      console.log('tabChanged')
+    }
+  };
+  computed = {};
+  events = {};
+  onLoad () { }
+}
+</script>

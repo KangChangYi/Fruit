@@ -1,0 +1,111 @@
+<style lang="less" scoped>
+  @border: 1px red solid;
+  .commodity-layout {
+    width: 100%;
+    height: 92vh;
+    padding-top: 44px;
+    display: flex;
+    .tab {
+      flex: 1;
+      background: #f7f7f7;
+      .tab-list-item {
+        height: 115rpx;
+        font-size: 13px;
+        font-weight: bold;
+        color: #898989;
+        display: flex;
+        align-items: center;
+        justify-content: center; // letter-spacing: 1rpx;
+      }
+    }
+    .List {
+      flex: 3.8;
+      overflow-x: scroll;
+      .fruits-list-title {
+        padding: 7rpx 0 9rpx 0;
+        font-size: 13px;
+        color: #464c5b;
+        font-weight: bold;
+        text-align: center;
+        background: #d4eceb;
+        width: 50%;
+        margin: auto;
+        margin-top: 20rpx;
+        border-radius: 15px;
+        &:before,
+        &:after {
+          content: ' - ';
+          font-weight: normal;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="commodity-layout">
+    <view class="tab">
+      <repeat for="{{commodityInfo}}" index="index" item="item">
+        <view class="tab-list-item" @tap="clickListItem({{index}})" style="{{index==listIndex?'background:white;color:#2c2c2c;border-left:3px #20716a solid':'border-left:3px #f7f7f7 solid'}}">
+          {{item.name}}
+        </view>
+      </repeat>
+    </view>
+    <view class="List">
+      <scroll-view scroll-y="true" style="height:100%" scroll-with-animation scroll-into-view="x{{classifyViewed}}">
+        <view id="x0" class="fruits-list-title">新鲜水果</view>
+        <repeat for="{{fruits}}" index="index" item="item">
+          <commodityCard :item="item" mode="商城"></commodityCard>
+        </repeat>
+        <view id="x1" class="fruits-list-title">休闲零食</view>
+        <repeat for="{{snacks}}" index="index" item="item">
+          <commodityCardTwo :item="item" mode="商城"></commodityCardTwo>
+        </repeat>
+      </scroll-view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import commodityCard from '../../../components/commodityCard'
+  export default class index extends wepy.component {
+    components = {
+      commodityCard,
+      commodityCardTwo: commodityCard
+    }
+    data = {
+      // 左侧菜单初始选中ID
+      listIndex: 0,
+      classifyViewed: '',
+      // 左侧菜单项
+      commodityInfo: [{
+        name: '新鲜水果'
+      }, {
+        name: '休闲零食'
+      }],
+      fruits: [],
+      snacks: []
+    }
+    methods = {
+      clickListItem(index) {
+        this.listIndex = index
+        this.classifyViewed = index
+        this.$apply()
+      }
+    }
+    computed = {}
+    events = {}
+    onLoad() {
+      wepy.showLoading({
+        title: '加载中'
+      })
+      this.fruits = this.$root.$parent.globalData.marketList.fruits
+      this.snacks = this.$root.$parent.globalData.marketList.snacks
+      this.$apply()
+      setTimeout(function() {
+        wepy.hideLoading()
+      }, 350)
+    }
+  }
+</script>

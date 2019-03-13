@@ -1,0 +1,25 @@
+<style lang="less" scoped>
+
+</style>
+
+<template>
+  <view>产地溯源</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '产地溯源',
+      usingComponents: {
+        // 'van-button': '/components/vant-weapp/button/index'
+      }
+    }
+    components = {}
+    methods = {}
+    data = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>

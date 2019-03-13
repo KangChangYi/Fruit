@@ -1,0 +1,69 @@
+<style lang="less" scoped>
+
+</style>
+
+<template>
+  <view class="container">
+    <userInfo></userInfo>
+    <orderFunciton></orderFunciton>
+    <cell></cell>
+    <Dividing></Dividing>
+  </view>
+</template>
+
+<script>
+  import Dividing from '../../components/Dividing'
+  import cell from './components/cell'
+  import orderFunciton from './components/orderFunciton'
+  import userInfo from './components/userInfo'
+  import wepy from 'wepy'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人中心',
+      usingComponents: {
+        'van-cell': '/components/vant-weapp/cell/index',
+        'van-cell-group': '/components/vant-weapp/cell-group/index'
+      }
+    };
+    components = {
+      userInfo,
+      orderFunciton,
+      cell,
+      Dividing
+    };
+    methods = {};
+    data = {};
+    computed = {};
+    events = {};
+    onLoad() {
+      // 获取个人资料缓存
+      const userInfo = this.$parent.globalData.userInfo
+      wepy.getStorage({
+        key: 'userInfo',
+        success(res) {
+          console.log(res.data)
+          userInfo.gender = res.data.gender
+          userInfo.bornDate = res.data.bornDate
+        }
+      })
+        // 获取地址缓存
+      const global = this.$parent.globalData
+      wepy.getStorage({
+        key: 'addressInfo',
+        success(res) {
+          console.log(res.data)
+          global.addressInfo = res.data
+        }
+      })
+      // wepy.login({
+      //   success: function () {
+      //     wepy.getUserInfo({
+      //       success: function (res) {
+      //         console.log(res.userInfo)
+      //       }
+      //     })
+      //   }
+      // })
+    }
+  }
+</script>

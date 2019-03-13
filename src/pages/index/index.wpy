@@ -1,0 +1,85 @@
+<style lang="less" scoped>
+  .Divide {
+    height: 3rpx;
+    background: #EFEFEF;
+    width: 88%;
+    margin: auto;
+  }
+</style>
+
+<template>
+  <view class="container">
+    <SelectAddress></SelectAddress>
+    <Swipers></Swipers>
+    <fourButton></fourButton>
+    <view class="Divide"> </view>
+    <threeActivity></threeActivity>
+    <fruits></fruits>
+    <Dividing></Dividing>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Dividing from '../../components/Dividing'
+  import SelectAddress from './components/selectAddress'
+  import Swipers from './components/swiper'
+  import fourButton from './components/fourButton'
+  import threeActivity from './components/threeActivity'
+  import fruits from './components/fruits'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: 'OHTA 果舍',
+      usingComponents: {
+        // 'van-icon': '/components/vant-weapp/icon/index'
+        // 'van-search': '/components/vant-weapp/search/index'
+      }
+    };
+    components = {
+      SelectAddress,
+      Swipers,
+      fourButton,
+      Dividing,
+      threeActivity,
+      fruits
+    };
+    data = {};
+    computed = {};
+    methods = {};
+    events = {};
+    showLoading() {
+      wepy.showLoading({
+        title: '加载中'
+      })
+      setTimeout(function() {
+        wepy.hideLoading()
+      }, 200)
+    }
+    onShow() {
+      const that = this
+      this.showLoading()
+      const global = this.$parent.globalData
+      wepy.getStorage({
+        key: 'shopCar',
+        success(res) {
+          global.shopCar = res.data
+        }
+      })
+      wepy.getStorage({
+        key: 'currentShop',
+        success(res) {
+          global.currentShop = res.data
+          // selectAddress组件
+          that.$broadcast('reShowCurrentShop', res.data)
+        },
+        fail(res) {
+          // selectAddress组件
+          that.$broadcast('reShowCurrentShop', '延安路店')
+        }
+      })
+    }
+    onLoad() {
+      // console.log(this.$parent)
+    }
+  }
+</script>

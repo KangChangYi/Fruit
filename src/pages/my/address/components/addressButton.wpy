@@ -1,0 +1,54 @@
+<style lang="less" scoped>
+  .button-layout {
+    background:white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 20rpx 0;
+  }
+  .button {
+    width: 90%;
+    margin: auto;
+    height: 90rpx;
+    background: #20716a;
+    border-radius: 5px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    &:active{
+      background:#278b83;
+    }
+  }
+</style>
+
+<template>
+  <view class="button-layout">
+    <button class="button" @tap="goToAddAddress">添加新收货地址</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '击剑',
+      usingComponents: {
+        // 'van-button': '/components/vant-weapp/button/index'
+      }
+    }
+    components = {}
+    methods = {
+      goToAddAddress() {
+        wepy.navigateTo({
+          url: 'addressManage/addAddress'
+        })
+      }
+    }
+    data = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>

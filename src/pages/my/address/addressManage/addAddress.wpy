@@ -1,0 +1,50 @@
+<style lang="less" scoped>
+
+</style>
+
+<template>
+  <view class="container">
+    <addressForm Nature="保存"></addressForm>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import addressForm from './components/addressForm'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '新增收货地址',
+      // 子组件的组件
+      usingComponents: {
+        'van-popup': '/components/vant-weapp/popup/index',
+        'van-area': '/components/vant-weapp/area/index',
+        'van-switch': '/components/vant-weapp/switch/index'
+      }
+    }
+    components = {
+      addressForm
+    }
+    methods = {}
+    data = {}
+    computed = {}
+    events = {
+      saveAddressInfo(ADDRESSINFO) {
+        this.$parent.globalData.addressInfo.push(ADDRESSINFO)
+        wepy.setStorage({
+          key: 'addressInfo',
+          data: this.$parent.globalData.addressInfo
+        })
+        wepy.showLoading({
+          title: '加载中'
+        })
+        setTimeout(function () {
+          wepy.hideLoading()
+          wepy.navigateBack({
+            delta: 1
+          })
+        }, 200)
+      }
+    }
+    onLoad() {}
+  }
+</script>

@@ -1,0 +1,33 @@
+<style lang="less" scoped>
+view{
+  width:100vw;
+  position: fixed;
+  top:0;
+  z-index: 10;
+  box-shadow: 0 0 7px rgba(0,0,0,0.4);
+}
+</style>
+
+<template>
+  <view @tap="goToSearch">
+    <van-search value="{{ value }}" background="#f7f7f7" disabled placeholder="请输入搜索关键词" />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    components = {}
+    methods = {
+      goToSearch() {
+        wepy.navigateTo({
+          url: '../index/search/search'
+        })
+      }
+    }
+    data = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>

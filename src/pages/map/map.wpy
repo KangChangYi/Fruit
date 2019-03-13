@@ -1,0 +1,189 @@
+<style lang="less" scoped>
+  .display(@display: flex;
+  @align-items: center;
+  @justify-content: center) {
+    display: @display;
+    align-items: @align-items;
+    justify-content: @justify-content;
+  }
+  .map-layout {
+    height: 100vh;
+  }
+  .address-box {
+    height: 70%;
+    overflow-x: scroll;
+    font-size: 13px;
+    .location-cell {
+      height: 140rpx;
+      border-bottom: 1px #f3f3f3 solid;
+      .display(@justify-content: unset);
+    }
+  }
+  .addressList-title {
+    padding-left: 30rpx;
+    flex: 9;
+    .primary-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #31353f;
+    }
+    .minor-title {
+      margin-top: 10rpx;
+      font-size: 12px;
+      color: #657180;
+    }
+  }
+  .addressList-checkbox {
+    flex: 1;
+  }
+</style>
+
+<template>
+  <view class="map-layout">
+    <map id="myMap" style="width: 100%; height: 30%;" longitude="{{userLocation.longitude}}" latitude="{{userLocation.latitude}}" scale='16' subkey="CS6BZ-B73RI-6GVGF-5OVH5-TGCX2-KPB64" polyline="{{polyline}}" markers="{{markers}}"></map>
+    <view class="address-box">
+      <!-- 循环列表 -->
+      <repeat for="{{addressList}}" key="index" index="index" item="item">
+        <view class="location-cell">
+          <view class="addressList-title">
+            <view class="primary-title">{{item.title}}</view>
+            <view class="minor-title">{{item.address}}</view>
+          </view>
+          <view class="addressList-checkbox">
+            <van-checkbox @tap="onClickCheckBox({{index}})" value="{{index===checkedIndex?true:false }}" checked-color="#20716a"></van-checkbox>
+          </view>
+        </view>
+      </repeat>
+      <!-- 循环列表 -->
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  var QQMapWX = require('../../libs/qqmap-wx-jssdk.js')
+  var mapSdk
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '位置',
+      usingComponents: {
+        'van-checkbox': '/components/vant-weapp/checkbox/index'
+      }
+    };
+    components = {}
+    data = {
+      markers: [],
+      // 当前选中地址
+      checkedIndex: -1,
+      // 地址列表
+      addressList: [],
+      // 用户地理信息
+      userLocation: {
+        currentAddress: '',
+        latitude: '',
+        longitude: ''
+      }
+    }
+    methods = {
+      // 改变单选按钮
+      onClickCheckBox(index) {
+        this.checkedIndex = index
+        const that = this
+        wepy.setStorage({
+          key: 'currentAddress',
+          data: {
+            title: that.addressList[index].title,
+            lat: that.addressList[index].location.lat,
+            lng: that.addressList[index].location.lng
+          }
+        })
+        this.showLoading()
+      }
+    }
+    computed = {}
+    events = {}
+    onShow() {}
+    onLoad() {
+      const that = this
+      mapSdk = new QQMapWX({
+        key: 'CS6BZ-B73RI-6GVGF-5OVH5-TGCX2-KPB64'
+      })
+      mapSdk.reverseGeocoder({
+        get_poi: '1',
+        success(res) {
+          const LOCATION = res.result.location
+          const ADDRESSNAME = res.result.address_component.street_number
+          that.changeCurrentAddress(LOCATION, ADDRESSNAME)
+          that.$apply()
+        }
+      })
+      wepy.getStorage({
+        key: 'currentAddress',
+        success(res) {
+          that.hasCurrentAddress(res.data)
+        },
+        fail(res) {
+          that.notHasCurrentAddress()
+        }
+      })
+    }
+    changeCurrentAddress(location, currentAddress) {
+      this.userLocation = {
+        currentAddress: currentAddress,
+        latitude: location.lat,
+        longitude: location.lng
+      }
+      this.markers = [{
+        iconPath: '/images/index/icon-mark.png',
+        id: 'myMap',
+        latitude: location.lat,
+        longitude: location.lng,
+        width: 36,
+        height: 36
+      }]
+    }
+    hasCurrentAddress(currentAddress) {
+      const that = this
+      mapSdk.search({
+        keyword: '学校',
+        page_size: 20,
+        success(res) {
+          const RESDATA = res.data
+          that.addressList = RESDATA
+          for (let i = 0; i < RESDATA.length; i++) {
+            if (RESDATA[i].title === currentAddress.title) {
+              that.checkedIndex = i
+              const LOCATION = RESDATA[i].location
+              const ADDRESSNAME = RESDATA[i].title
+              that.changeCurrentAddress(LOCATION, ADDRESSNAME)
+            }
+          }
+          that.$apply()
+        }
+      })
+    }
+    notHasCurrentAddress() {
+      const that = this
+      mapSdk.search({
+        keyword: '学校',
+        page_size: 20,
+        success(res) {
+          that.addressList = res.data
+          that.$apply()
+        }
+      })
+    }
+    // 消息框
+    showLoading() {
+      wepy.showLoading({
+        title: '加载中'
+      })
+      setTimeout(function() {
+        wepy.hideLoading()
+        wepy.navigateBack({
+          delta: 1
+        })
+      }, 400)
+    };
+  }
+</script>

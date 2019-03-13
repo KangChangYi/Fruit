@@ -1,0 +1,60 @@
+<style lang="less" scoped>
+  .layout {
+    height: 90vh;
+    overflow-x: scroll;
+  }
+</style>
+
+<template>
+  <view class="layout">
+    <isAddressHas wx:if="{{notHasAddress}}"></isAddressHas>
+    <addressList wx:else></addressList>
+    <addressButton></addressButton>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import isAddressHas from './components/isAddressHas'
+  import addressList from './components/addressList'
+  import addressButton from './components/addressButton'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '收货地址',
+      usingComponents: {}
+    };
+    components = {
+      isAddressHas,
+      addressButton,
+      addressList
+    };
+    data = {
+      addressInfo: [],
+      notHasAddress: true
+    };
+    methods = {};
+    computed = {};
+    events = {};
+    onShow() {
+      if (this.$parent.globalData.addressInfo.length !== 0) {
+        const INFO = this.$parent.globalData.addressInfo
+        this.addressInfo = INFO
+        this.$broadcast('reShowAddressList', this.addressInfo)
+        // 是否存在地址信息
+        this.notHasAddress = false
+      } else {
+        this.notHasAddress = true
+      }
+    }
+    onLoad() {
+      if (this.$parent.globalData.addressInfo.length !== 0) {
+        const INFO = this.$parent.globalData.addressInfo
+        this.addressInfo = INFO
+        // 是否存在地址信息
+        this.notHasAddress = false
+      } else {
+        this.notHasAddress = true
+      }
+    };
+  }
+</script>

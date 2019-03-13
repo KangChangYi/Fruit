@@ -1,0 +1,86 @@
+<style lang="less" scoped>
+  @border: 1px red solid;
+  .button-layout {
+    width: 100%;
+    display: flex; // border: @border;
+    padding: 20rpx 0 20rpx 0;
+  }
+  .button-box {
+    padding: 15rpx 0 15rpx 0;
+    flex: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px; // border: @border;
+    &:active {
+      background: #f3f3f3;
+    }
+  }
+  .button-img {
+    width: 110rpx;
+    height: 110rpx;
+    margin-bottom: 15rpx;
+  }
+  .button-text {
+    font-size: 13px;
+    color: #464c5b;
+  }
+</style>
+
+<template>
+  <view class="button-layout">
+    <view style="flex:1"></view>
+    <view class="button-box" @tap="goToFruitOrigin">
+      <image class="button-img" src="../../../images/index/Origin-logo.png" />
+      <view class="button-text">产地溯源</view>
+    </view>
+    <view class="button-box" @tap="goToFruitReport">
+      <image class="button-img" src="../../../images/index/Report-logo.png" />
+      <view class="button-text">检测报告</view>
+    </view>
+    <view class="button-box" @tap="goToFruitDictionary">
+      <image class="button-img" src="../../../images/index/Dictionary-logo.png" />
+      <view class="button-text">水果百科</view>
+    </view>
+    <view class="button-box" @tap="goToFruitPicking">
+      <image class="button-img" src="../../../images/index/Activity-logo.png" />
+      <view class="button-text">采摘活动</view>
+    </view>
+    <view style="flex:1"></view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    config = {};
+    components = {};
+    methods = {
+      goToFruitOrigin() {
+        wepy.navigateTo({
+          url: 'fruitOrigin/fruitOrigin'
+        })
+      },
+      goToFruitDictionary() {
+        wepy.navigateTo({
+          url: 'fruitDictionary/fruitDictionary'
+        })
+      },
+      goToFruitReport() {
+        wepy.navigateTo({
+          url: 'fruitReport/fruitReport'
+        })
+      },
+      goToFruitPicking() {
+        wepy.navigateTo({
+          url: 'fruitPicking/fruitPicking'
+        })
+      }
+    };
+    data = {};
+    computed = {};
+    events = {};
+    onLoad() {}
+  }
+</script>

@@ -1,0 +1,94 @@
+<style lang="less" scoped>
+  .layout {
+    background: #f5f5f5;
+    padding-top: 30rpx;
+    box-sizing: border-box;
+    .list-layout {
+      width: 92%;
+      height: 200rpx;
+      margin: auto;
+      margin-bottom: 30rpx;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      .list-info {
+        padding: 30rpx;
+        flex: 8;
+        .address-details {
+          font-size: 14px;
+          font-weight: bold;
+          color: #373b44;
+          display: flex;
+          flex-direction: column;
+           :last-child {
+            font-size: 12px;
+            color: #898989;
+            margin-top: 30rpx;
+          }
+        }
+      }
+      .list-modify-icon {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        image {
+          width: 38rpx;
+          height: 38rpx;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="layout">
+    <repeat for="{{addressInfo}}" index="index" item="item">
+      <view class="list-layout" @tap="clickItem({{index}})">
+        <view class="list-info">
+          <view class="address-details">
+            <span>{{item.cityValue}}</span>
+            <span>{{item.detailAddress}}</span>
+            <span>{{item.name}} ({{item.gender}}) {{item.telPhone}}</span>
+          </view>
+        </view>
+        <view class="list-modify-icon">
+          <image src="/images/my/icon-address-modify.png" />
+        </view>
+      </view>
+    </repeat>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    components = {}
+    data = {
+      addressInfo: []
+    };
+    methods = {
+      clickItem(index) {
+        let clickedInfo = this.addressInfo[index]
+        wepy.setStorage({
+          key: 'addressIndex',
+          data: clickedInfo
+        })
+        wepy.navigateTo({
+          url: 'addressManage/modifyAddress?id=' + index
+        })
+      }
+    };
+    computed = {};
+    events = {
+      reShowAddressList(list) {
+        this.addressInfo = list
+      }
+    };
+    onLoad() {
+      this.addressInfo = this.$parent.addressInfo
+      console.log(this.addressInfo)
+      this.$apply()
+    };
+  }
+</script>

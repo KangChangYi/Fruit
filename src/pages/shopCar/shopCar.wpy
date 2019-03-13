@@ -1,0 +1,140 @@
+<style lang="less" scoped>
+  .layout {
+    height: 91vh;
+    background: #f3f4f6;
+    .delete-box {
+      height: fit-content;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      background: white;
+      image {
+        padding: 0 35rpx 20rpx 0;
+        width: 44rpx;
+        height: 44rpx;
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="layout">
+    <view class="delete-box" wx:if="{{HasNotInfo===false}}">
+      <image @tap="clickDelete" src="/images/my/icon-delete.png" />
+    </view>
+    <isShopCarHas wx:if="{{HasNotInfo}}"></isShopCarHas>
+    <shopList wx:else :itemPriceList.sync="itemPriceList"></shopList>
+    <submitPay></submitPay>
+    <Dividing></Dividing>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import isShopCarHas from './components/isShopCarHas'
+  import shopList from './components/shopList'
+  import submitPay from './components/submitPay'
+  import Dividing from '../../components/Dividing'
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '购物车',
+      usingComponents: {
+        'van-submit-bar': '/components/vant-weapp/submit-bar/index',
+        'van-radio': '/components/vant-weapp/radio/index',
+        'van-stepper': '/components/vant-weapp/stepper/index',
+        'van-checkbox': '/components/vant-weapp/checkbox/index',
+        'van-checkbox-group': '/components/vant-weapp/checkbox-group/index'
+      }
+    };
+    components = {
+      isShopCarHas,
+      shopList,
+      submitPay,
+      Dividing
+    };
+    data = {
+      HasNotInfo: true,
+      itemPriceList: []
+    };
+    methods = {
+      clickDelete() {
+        // 判断商品是否选中
+        const that = this
+        if (this.itemPriceList.every(itemPriceList => {
+          return itemPriceList.state === false
+        })) {
+          wepy.showToast({
+            title: '还未选择任何商品',
+            icon: 'none',
+            duration: 900
+          })
+        } else {
+          wepy.showModal({
+            title: '提示',
+            content: '确认要删除选中商品？',
+            success(res) {
+              if (res.confirm) {
+                that.clickConfirm()
+              }
+            }
+          })
+        }
+      }
+    };
+    // 用户点击确定
+    clickConfirm() {
+      const that = this
+      for (let i = 0; i < this.itemPriceList.length; i++) {
+        if (this.itemPriceList[i].state === true) {
+          this.$parent.globalData.shopCar.splice(i, 1)
+          this.itemPriceList.splice(i, 1)
+          i = -1
+        }
+      }
+      const globalShopCarList = this.$parent.globalData.shopCar
+      wepy.setStorage({
+        key: 'shopCar',
+        data: globalShopCarList,
+        success(res) {
+          if (globalShopCarList.length === 0) {
+            that.HasNotInfo = true
+          }
+          that.$broadcast('reShowShopCar', globalShopCarList)
+        }
+      })
+      wepy.showLoading({
+        title: '加载中'
+      })
+      setTimeout(function() {
+        wepy.hideLoading()
+      }, 300)
+      this.$apply()
+    }
+    computed = {};
+    events = {
+      // 子组件shopList触发事件
+      giveToSubmitPay(itemPriceList) {
+        this.$broadcast('reShowSumPrice', itemPriceList)
+      },
+      // 子组件submitPay触发事件
+      allSelect(allSelect) {
+        this.$broadcast('changeAllSelect', allSelect)
+      }
+    };
+    onShow() {
+      let shopCar = []
+      shopCar = this.$parent.globalData.shopCar
+      if (shopCar.length !== 0) {
+        this.$broadcast('reShowShopCar', shopCar)
+        this.HasNotInfo = false
+      }
+      wepy.showLoading({
+        title: '加载中'
+      })
+      setTimeout(function() {
+        wepy.hideLoading()
+      }, 300)
+    }
+    onLoad() {}
+  }
+</script>

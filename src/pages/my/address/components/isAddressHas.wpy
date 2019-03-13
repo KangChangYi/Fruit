@@ -1,0 +1,28 @@
+<style lang="less" scoped>
+  .bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 60%;
+  }
+</style>
+
+<template>
+  <view class="bg">
+    <image src="/images/my/bg-address.png" style="width:270rpx;height:270rpx" />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    config = {}
+    components = {}
+    methods = {}
+    data = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>

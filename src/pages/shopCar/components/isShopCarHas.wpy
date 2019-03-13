@@ -1,0 +1,50 @@
+<style lang="less" scoped>
+  .shop-car-has-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 82%;
+    button{
+      margin-top:40rpx;
+      color:#20716a;
+      border:1px #20716a solid;
+      font-size:12px;
+      width:180rpx;
+    }
+  }
+  .img-face {
+    width: 300rpx;
+    height: 330rpx;
+  }
+  .text {
+    padding-top: 15rpx;
+    font-size: 13px;
+    color: #d0e3c8;
+  }
+</style>
+
+<template>
+  <view class="shop-car-has-layout">
+    <image src="/images/my/bg-shopCar.png" class="img-face" />
+    <button @tap="goToIndex">随便逛逛</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    components = {}
+    methods = {
+      goToIndex() {
+        wepy.switchTab({
+          url: '../index/index'
+        })
+      }
+    }
+    data = {}
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>

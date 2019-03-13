@@ -1,0 +1,234 @@
+<style lang="less" scoped>
+  .image-layout( @width: 35rpx;
+  @height: 35rpx;
+  @margin-right: 15rpx) {
+    width: @width;
+    height: @height;
+    margin-right: @margin-right;
+  }
+  .display( @display: flex;
+  @align-items: center;
+  @justify-content: center) {
+    display: @display;
+    align-items: @align-items;
+    justify-content: @justify-content;
+  }
+  @border: 1px red solid;
+  .allAddress-layout {
+    width: 100%;
+    height: 100vh;
+    .address-box {
+      width: 91%;
+      margin: auto;
+      height: 100%;
+      font-size: 13px;
+      .location-cell {
+        border-bottom: 1px #f3f3f3 solid;
+        padding: 30rpx 0 30rpx 0;
+        .display(@justify-content: unset);
+      }
+    }
+  }
+  .current-text {
+    .display(@justify-content: unset);
+    width: 24%;
+    image {
+      .image-layout(@margin-right: 15rpx)
+    }
+  }
+  .address-text {
+    .display(@justify-content: flex-end);
+    color: #20716a;
+    width: 75%;
+    image {
+      .image-layout(@margin-right: 0)
+    }
+  }
+  .shopList-title {
+    flex: 9;
+    .primary-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #31353f;
+    }
+    .minor-title {
+      margin-top: 10rpx;
+      font-size: 12px;
+      color: #657180;
+    }
+  }
+  .shopList-checkbox {
+    flex: 1;
+  }
+</style>
+
+<template>
+  <view class="allAddress-layout">
+    <van-search bind:search="goSearch" background="#f3f3f3" placeholder="请输入水果店关键词" />
+    <view class="address-box">
+      <view class="location-cell" @tap="goToMap">
+        <view class="current-text">
+          <image src="/images/index/icon-address.png" />
+          <span>当前位置</span>
+        </view>
+        <view class="address-text">
+          {{currentAddressTitle}}
+          <image src="/images/global/icon-right-arrow.png" />
+        </view>
+      </view>
+      <view class="location-cell">附近门店</view>
+      <repeat for="{{shopList}}" key="index" index="index" item="item">
+        <view class="location-cell" style="padding: 40rpx 0 40rpx 0;">
+          <view class="shopList-title">
+            <view class="primary-title">{{item.title}}</view>
+            <view class="minor-title">{{item.address}}</view>
+          </view>
+          <view class="shopList-checkbox">
+            <van-checkbox @tap="onClickCheckBox({{index}})"
+            value="{{index===checkedIndex?true:false }}" checked-color="#20716a"></van-checkbox>
+          </view>
+        </view>
+      </repeat>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  var QQMapWX = require('../../../libs/qqmap-wx-jssdk.js')
+  var mapSdk
+  export default class index extends wepy.page {
+    config = {
+      navigationBarTitleText: '选择门店',
+      usingComponents: {
+        'van-search': '/components/vant-weapp/search/index',
+        'van-checkbox': '/components/vant-weapp/checkbox/index'
+      }
+    };
+    components = {};
+    data = {
+      // 商店列表
+      shopList: [],
+      // 当前选中商店
+      checkedIndex: -1,
+      // 当前位置
+      currentAddressTitle: ''
+    };
+    methods = {
+      // 搜索
+      goSearch(searchInfo) {
+        const that = this
+        const INFO = searchInfo.detail
+        if (INFO === '') {
+          this.reSearch()
+        } else {
+          this.checkedIndex = -1
+          mapSdk.getSuggestion({
+            keyword: INFO,
+            success(res) {
+              that.shopList = res.data
+              that.isAddressSelect(res.data)
+              that.$apply()
+            }
+          })
+        }
+      },
+      // 改变单选按钮
+      onClickCheckBox(index) {
+        this.checkedIndex = index
+        const that = this
+        wepy.setStorage({
+          key: 'currentShop',
+          data: that.shopList[index].title
+        })
+        this.showLoading()
+      },
+      // 跳转到地图页
+      goToMap() {
+        wepy.navigateTo({
+          url: '../../map/map'
+        })
+      }
+    };
+    computed = {};
+    events = {};
+    onShow() {
+      mapSdk = new QQMapWX({
+        key: 'CS6BZ-B73RI-6GVGF-5OVH5-TGCX2-KPB64'
+      })
+      const that = this
+      // 获取缓存中的当前位置
+      wepy.getStorage({
+        key: 'currentAddress',
+        success(res) {
+          that.currentAddressTitle = res.data.title
+          const currentAddressLocation = {
+            lat: res.data.lat,
+            lng: res.data.lng
+          }
+          that.reSearchHasSto(currentAddressLocation)
+          that.$apply()
+        },
+        fail(res) {
+          that.reSearch()
+        }
+      })
+    }
+    onLoad() {}
+    // 全局方法
+    // 有缓存时
+    reSearchHasSto(Locat) {
+      const that = this
+      mapSdk.search({
+        keyword: '水果',
+        location: {
+          latitude: Locat.lat,
+          longitude: Locat.lng
+        },
+        page_size: 15,
+        success(res) {
+          that.shopList = res.data
+          that.isAddressSelect(res.data)
+          that.$apply()
+        }
+      })
+    }
+    // 无缓存时
+    reSearch() {
+      const that = this
+      const selectShop = this.$parent.globalData.currentShop
+      mapSdk.search({
+        keyword: '水果',
+        page_size: 15,
+        success(res) {
+          that.shopList = res.data
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].title === selectShop) {
+              that.checkedIndex = i
+            }
+          }
+          that.$apply()
+        }
+      })
+    }
+    isAddressSelect(list) {
+      const selectShop = this.$parent.globalData.currentShop
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].title === selectShop) {
+          this.checkedIndex = i
+        }
+      }
+    }
+    showLoading() {
+      wepy.showLoading({
+        title: '加载中'
+      })
+      setTimeout(function() {
+        wepy.hideLoading()
+        wepy.navigateBack({
+          delta: 1
+        })
+      }, 400)
+    };
+  }
+</script>

@@ -1,0 +1,22 @@
+<style lang="less" scoped>
+</style>
+
+<template>
+  <view>123</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class index extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的活动',
+    usingComponents: {}
+  };
+  components = {};
+  methods = {};
+  data = {};
+  computed = {};
+  events = {};
+  onLoad() {}
+}
+</script>

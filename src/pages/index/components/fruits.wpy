@@ -1,0 +1,63 @@
+<style lang="less" scoped>
+  @border: 1px red solid;
+  .fruits-layout {
+    padding-top: 15rpx;
+  }
+  .fruits-list-title {
+    padding: 7rpx 0 9rpx 0;
+    font-size: 15px;
+    color: #464c5b;
+    font-weight: bold;
+    text-align: center;
+    background: #d4eceb;
+    width: 50%;
+    margin: auto;
+    margin-bottom: 50rpx;
+    border-radius: 15px;
+    &:before,
+    &:after {
+      content: ' - ';
+      font-weight: normal;
+    }
+  }
+  .no-more {
+    font-size: 13px;
+    margin: auto;
+    text-align: center;
+    color: #c3cbd6; // background: #f4f4f4;
+    // border-radius: 12px;
+    width: 40%;
+    padding: 7rpx;
+    margin: 20rpx auto 20rpx auto;
+  }
+</style>
+
+<template>
+  <view class="fruits-layout">
+    <view class="fruits-list-title">精选水果</view>
+    <repeat for="{{fruits}}" key="index" index="index" item="item">
+      <commodityCard :item="item" mode="首页"></commodityCard>
+    </repeat>
+    <view class="no-more">没有更多了</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import commodityCard from '../../../components/commodityCard'
+  export default class index extends wepy.component {
+    components = {
+      commodityCard
+    }
+    methods = {}
+    data = {
+      fruits: []
+    }
+    computed = {}
+    events = {}
+    onLoad() {
+      this.fruits = this.$root.$parent.globalData.marketList.fruits
+      this.$apply()
+    }
+  }
+</script>

@@ -1,0 +1,44 @@
+<style lang="less" scoped>
+  .layout {
+    padding: 15rpx 37rpx 15rpx 37rpx;
+    display: flex;
+  }
+  .img1-layout {
+    image {
+      width: 333rpx;
+      height: 283rpx;
+    }
+  }
+  .img2-3-layout {
+    padding-left: 13rpx;
+    image {
+      width: 333rpx;
+      height: 135rpx;
+    }
+  }
+</style>
+
+<template>
+  <view class="layout">
+    <view class="img1-layout">
+      <image src="/images/index/activity1.jpg" />
+    </view>
+    <view class="img2-3-layout">
+      <image style="margin-bottom:7rpx;" src="/images/index/activity2.jpg" />
+      <image src="/images/index/activity3.jpg" />
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class index extends wepy.component {
+    components = {}
+    methods = {}
+    data = {
+    }
+    computed = {}
+    events = {}
+    onLoad() {}
+  }
+</script>
