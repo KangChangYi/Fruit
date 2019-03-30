@@ -68,6 +68,7 @@
 
 <script>
   import wepy from 'wepy'
+  import GLOBAL from '../../../libs/GLOBAL'
   import commodityCard from '../../../components/commodityCard'
   export default class index extends wepy.component {
     components = {
@@ -100,9 +101,23 @@
       wepy.showLoading({
         title: '加载中'
       })
-      this.fruits = this.$root.$parent.globalData.marketList.fruits
-      this.snacks = this.$root.$parent.globalData.marketList.snacks
-      this.$apply()
+      const that = this
+      wepy.request({
+        url: GLOBAL.url + '/product/allProduct',
+        method: 'get',
+        success(res) {
+          console.log(res.data.data)
+          const FRUITS = res.data.data
+          that.fruits = FRUITS.filter((item) => {
+            return item.type === '水果类'
+          })
+          that.snacks = FRUITS.filter((item) => {
+            return item.type === '零食类'
+          })
+          that.$apply()
+        }
+      })
+      // const FRUITS = this.$root.$parent.globalData.marketList.fruits
       setTimeout(function() {
         wepy.hideLoading()
       }, 350)

@@ -119,6 +119,10 @@
       // 子组件submitPay触发事件
       allSelect(allSelect) {
         this.$broadcast('changeAllSelect', allSelect)
+      },
+      // 用户点击提交订单
+      clickSubmit() {
+        this.$broadcast('giveCommoditystatus', this.itemPriceList)
       }
     };
     onShow() {

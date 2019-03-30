@@ -63,24 +63,24 @@
   }
 </style>
 
-<template>  
+<template>
   <view class="card-layout" style="{{mode==='购物车'?'border-bottom:0px':''}}">
     <view class="img-layout" style="{{mode==='购物车'?'padding-left:20rpx':''}}">
-      <image src="{{item.img}}" />
+      <image src="{{item.image}}" />
     </view>
     <view class="info-layout">
       <view class="info-title">
-        {{item.title}}
+        {{item.name}}
       </view>
       <view class="info-min-title">
-        {{item.minTitle}}
+        {{item.introduction}}
       </view>
       <view class="price-and-bottom">
         <view class="info-price" style="{{mode!=='首页'?'font-size:16px':''}}">
           ￥{{item.price}}
         </view>
         <view class="info-min-price" wx:if="{{mode==='首页'}}">
-          ￥{{item.minPrice}}
+          ￥{{item.price + 12.1}}
         </view>
         <view class="info-button" wx:if="{{mode!=='购物车'}}" @tap="onClickAdd">
           <image src="../images/global/icon-add.png" />

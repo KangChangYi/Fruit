@@ -44,6 +44,7 @@
 
 <script>
   import wepy from 'wepy'
+  import GLOBAL from '../../../libs/GLOBAL'
   import commodityCard from '../../../components/commodityCard'
   export default class index extends wepy.component {
     components = {
@@ -56,8 +57,25 @@
     computed = {}
     events = {}
     onLoad() {
-      this.fruits = this.$root.$parent.globalData.marketList.fruits
-      this.$apply()
+      const URL = GLOBAL.url
+      const that = this
+      wepy.request({
+        url: URL + '/product/list',
+        method: 'get',
+        data: {
+          limit: 5,
+          page: 1
+        },
+        success(res) {
+          that.fruits = res.data.data.list
+          that.fruits.map((item) => {
+            item.Number = 1
+          })
+          that.$apply()
+          console.log(that.fruits)
+          that.$root.$parent.globalData.marketList.fruits = that.fruits
+        }
+      })
     }
   }
 </script>

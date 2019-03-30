@@ -27,6 +27,7 @@
 
 <script>
   import wepy from 'wepy'
+  import GLOBAL from '../../../libs/GLOBAL'
   export default class index extends wepy.component {
     components = {};
     data = {
@@ -46,6 +47,7 @@
       onClickSubmit() {
         console.log('点击了提交订单')
         console.log(this.price)
+        this.$emit('clickSubmit')
       }
     };
     computed = {};
@@ -65,13 +67,52 @@
         } else {
           this.value = '0'
         }
+      },
+      // 用户点击提交订单后父组件触发的函数
+      giveCommoditystatus(status) {
+        const SHOPCAR = this.$root.$parent.globalData.shopCar
+        const STATUS = status
+        let productName = ''
+        let number = 0
+        let price = 0
+        let image = ''
+        STATUS.forEach((item, index) => {
+          if (item.state) {
+            productName = productName + SHOPCAR[index].name + ' '
+            number = number + SHOPCAR[index].Number
+            price = price + SHOPCAR[index].price
+            image = image + SHOPCAR[index].image + ','
+          }
+        })
+        console.log(SHOPCAR)
+        const userInfo = this.$root.$parent.globalData.userInfo
+        wepy.request({
+          url: GLOBAL.url + '/order/insert',
+          method: 'POST',
+          data: {
+            userId: '1',
+            name: userInfo.name,
+            address: '文理学院河西校区',
+            productName,
+            number,
+            price,
+            image
+          },
+          success(res) {
+            console.log(res)
+          }
+        })
+        wx.showToast({
+          title: '提交订单成功',
+          icon: 'success',
+          duration: 1500
+        })
       }
+
     };
     // 所有商品选中情况
     isHasItemSelected(LIST) {
-      if (LIST.every(LIST => {
-        return LIST.state === true
-      })) {
+      if (LIST.every(LIST => { return LIST.state === true })) {
         this.value = '1'
       } else {
         this.value = '0'

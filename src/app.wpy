@@ -11,11 +11,11 @@
     config = {
       pages: [
         'pages/index/index',
-        'pages/my/order/order',
         'pages/my/my',
+        'pages/market/market',
+        'pages/my/order/order',
         'pages/index/allAddress/allAddress',
         'pages/map/map',
-        'pages/market/market',
         'pages/shopCar/shopCar',
         'pages/index/fruitDictionary/fruitDictionary',
         'pages/index/search/search',
@@ -69,14 +69,18 @@
     };
     globalData = {
       userInfo: {
-        gender: '',
+        name: '',
+        telphone: '',
+        sex: '',
         bornDate: ''
       },
       addressInfo: [
 
       ],
       shopCar: [],
+      // 购物车
       currentShop: [],
+      // 商城列表：
       marketList: {
         fruits: [{
           title: '智利蓝莓 500g',
@@ -85,88 +89,13 @@
           price: 35.8,
           minPrice: 59.8,
           Number: 1
-        },
-        {
-          title: '绿心猕猴桃 2.2kg',
-          img: '/images/global/fruits2.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 54.90,
-          minPrice: 79.9,
-          Number: 1
-        },
-        {
-          title: '红富士苹果 2.6kg',
-          img: '/images/global/fruits3.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 49.90,
-          minPrice: 59.9,
-          Number: 1
-        },
-        {
-          title: '进口脐橙 1.8kg',
-          img: '/images/global/fruits8.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 55.9,
-          minPrice: 59.9,
-          Number: 1
-        },
-        {
-          title: '云南天山雪莲果 5kg',
-          img: '/images/global/fruits1.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 19.9,
-          minPrice: 28.9,
-          Number: 1
-        },
-        {
-          title: '糖果番茄 320g',
-          img: '/images/global/fruits6.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 18.9,
-          minPrice: 23.9,
-          Number: 1
-        },
-        {
-          title: '冬枣脆甜水果 4kg',
-          img: '/images/global/fruits7.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 39.9,
-          minPrice: 50,
-          Number: 1
-        },
-        {
-          title: '脆甜柿子 6个',
-          img: '/images/global/fruits4.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 32.90,
-          minPrice: 39.9,
-          Number: 1
-        }
-        ],
-        snacks: [{
-          title: '拉面丸子 85g',
-          img: '/images/global/snacks1.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 12.9,
-          minPrice: 11.9,
-          Number: 1
-        }, {
-          title: '抹茶麻薯 150g',
-          img: '/images/global/snacks2.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 9.00,
-          minPrice: 11.00,
-          Number: 1
-        }, {
-          title: '零食大礼包 1640g',
-          img: '/images/global/snacks3.jpg',
-          minTitle: '来颗蓝莓压压\'睛\'',
-          price: 79.00,
-          minPrice: 89.00,
-          Number: 1
         }]
+      },
+      orderList: {
+
       }
     };
-    onLaunch() {}
+    onLaunch() {
+    }
   }
 </script>

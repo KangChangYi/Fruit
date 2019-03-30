@@ -62,13 +62,13 @@
       <open-data type="userNickName" class="userinfo-nickname" lang="zh_CN"></open-data>
     </view>
     <view class="cell">
-      <view class="font">昵称</view>
+      <view class="font">姓 名</view>
       <view class="infoframe" style="padding-left:10rpx;">
-        <open-data type="userNickName" class="userinfo-nickname" lang="zh_CN"></open-data>
+        <input type="text" value="{{name}}" placeholder="请输入姓名" bindinput="inputName" />
       </view>
     </view>
     <view class="cell">
-      <view class="font">性  别</view>
+      <view class="font">性 别</view>
       <view class="infoframe">
         <radio-group bindchange="radioChange">
           <radio color="#20716a" style="transform:scale(0.7);" value="男士" checked="{{male}}" />男士
@@ -77,7 +77,13 @@
       </view>
     </view>
     <view class="cell">
-      <view class="font">生日</view>
+      <view class="font">电 话</view>
+      <view class="infoframe" style="padding-left:10rpx;">
+        <input type="number" value="{{telphone}}" placeholder="请输入电话" bindinput="inputTelPhone" />
+      </view>
+    </view>
+    <view class="cell">
+      <view class="font">生 日</view>
       <view class="infoframe" style="padding-left:10rpx;">
         <picker mode="date" value="{{date}}" start="1960-06-01" end="2018-06-01" bindchange="dateChange">
           <view>{{date}}</view>
@@ -90,20 +96,29 @@
 
 <script>
   import wepy from 'wepy'
+  import GLOBAL from '../../../libs/GLOBAL'
   export default class index extends wepy.page {
     config = {
       navigationBarTitleText: '个人信息'
     }
     data = {
+      name: '',
+      telphone: '',
       // 日期选择器
       date: '1995-06-14',
       // 性别
-      genderValue: '',
-      male: false,
+      genderValue: '男士',
+      male: true,
       female: false
     }
     components = {}
     methods = {
+      inputName(e) {
+        this.name = e.detail.value
+      },
+      inputTelPhone(e) {
+        this.telphone = e.detail.value
+      },
       radioChange(e) {
         this.genderValue = e.detail.value
       },
@@ -115,7 +130,9 @@
         wepy.setStorage({
           key: 'userInfo',
           data: {
-            gender: this.genderValue,
+            name: this.name,
+            telphone: this.telphone,
+            sex: this.genderValue,
             bornDate: this.date
           },
           success(res) {
@@ -128,23 +145,44 @@
             }
           }
         })
+        wepy.request({
+          url: GLOBAL.url + '/user/update',
+          method: 'POST',
+          data: {
+            pkId: '1',
+            sex: this.genderValue,
+            name: this.name,
+            telphone: this.telphone,
+            birth: this.date
+          },
+          success(res) {
+            console.log(res)
+          }
+        })
+        wepy.showToast({
+          title: '保存成功',
+          icon: 'success',
+          duration: 1500
+        })
         // 同时保存到全局变量
-        this.$parent.globalData.userInfo.gender = this.genderValue
-        this.$parent.globalData.userInfo.bornDate = this.date
         console.log(this.$parent.globalData.userInfo)
       }
     }
     computed = {}
     events = {}
     onLoad() {
-      if (this.$parent.globalData.userInfo.gender === '男士') {
+      const DATA = this.$parent.globalData.userInfo
+      if (DATA.sex === '男士') {
         this.male = true
-      } else if (this.$parent.globalData.userInfo.gender === '女士') {
+      } else if (DATA.sex === '女士') {
         this.female = true
       }
-      if (this.$parent.globalData.userInfo.bornDate !== '') {
-        this.date = this.$parent.globalData.userInfo.bornDate
+      if (DATA.bornDate !== '') {
+        this.date = DATA.bornDate
       }
+      this.name = DATA.name
+      this.telphone = DATA.telphone
+      this.genderValue = DATA.sex
     }
   }
 </script>

@@ -16,6 +16,7 @@
   import cell from './components/cell'
   import orderFunciton from './components/orderFunciton'
   import userInfo from './components/userInfo'
+  import GLOBAL from '../../libs/GLOBAL'
   import wepy from 'wepy'
   export default class index extends wepy.page {
     config = {
@@ -34,16 +35,54 @@
     methods = {};
     data = {};
     computed = {};
-    events = {};
+    events = {
+      goToOrderPage(active) {
+        this.$preload('active', active)
+        wepy.navigateTo({
+          url: 'order/order'
+        })
+      }
+    };
+    onShow() {
+      const that = this
+      wepy.request({
+        url: GLOBAL.url + '/order/list',
+        method: 'get',
+        success(res) {
+          const toBeShipped = []
+          const toBeReceived = []
+          const toBeEvaluated = []
+          const orderList = res.data.data
+          orderList.forEach((item, index) => {
+            switch (item.status) {
+              case '待发货':
+                toBeShipped.push(item)
+                break
+              case '待收货':
+                toBeReceived.push(item)
+                break
+              case '待评价':
+                toBeEvaluated.push(item)
+                break
+            }
+          })
+          that.$parent.globalData.orderList = {
+            toBeShipped,
+            toBeReceived,
+            toBeEvaluated
+          }
+          that.$apply()
+          console.log(that.$parent.globalData.orderList)
+        }
+      })
+    }
     onLoad() {
       // 获取个人资料缓存
-      const userInfo = this.$parent.globalData.userInfo
+      const globalData = this.$parent.globalData
       wepy.getStorage({
         key: 'userInfo',
         success(res) {
-          console.log(res.data)
-          userInfo.gender = res.data.gender
-          userInfo.bornDate = res.data.bornDate
+          globalData.userInfo = res.data
         }
       })
         // 获取地址缓存

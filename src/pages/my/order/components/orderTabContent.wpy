@@ -1,0 +1,184 @@
+<style lang="less" scoped>
+.displayCenter(@justify-content:center,@align-items:center) {
+    display: flex;
+    justify-content: @justify-content;
+    align-items: @align-items;
+}
+.content-box {
+    width: 100%;
+    height: fit-content;
+    .displayCenter();
+    flex-direction: column;
+    padding-top: 30rpx;
+    #non-order-bg {
+        padding-top: 200rpx;
+        width: 300rpx;
+        height: 340rpx;
+    }
+}
+.order-box {
+    width: 92%;
+    height: 270rpx;
+    border-radius: 10px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
+    background: white;
+    margin-bottom: 30rpx;
+    padding: 15rpx 25rpx;
+    box-sizing: border-box;
+    font-size: 14px;
+    .displayCenter(@justify-content:space-between);
+    flex-direction: column;
+    // border: 1px red solid;
+    .order-header {
+        width: 100%;
+        // border: 1px red solid;
+        .displayCenter(@justify-content:space-between);
+        .order-id {
+            font-size: 14px;
+        }
+        .order-state {
+            color: rgb(255, 222, 75);
+        }
+    }
+    .order-image {
+        width: 100%;
+        // border: 1px red solid;
+        .displayCenter(@justify-content:flex-start);
+        #commodity-img {
+            width: 128rpx;
+            height: 128rpx;
+        }
+    }
+    .order-price-button {
+        width: 100%;
+        .displayCenter(@justify-content:flex-end);
+    }
+}
+</style>
+
+<template>
+    <view class="content-box">
+        <view wx:if="{{list.length===0 && useFor!=='all'}}">
+           <image id="non-order-bg" src="../../../../images/my/bg-order.png" />
+        </view>
+
+        <repeat for="{{list}}" key="index" index="index" item="item">
+            <view  wx:if="{{list.length!==0}}" class="order-box">
+                <view class="order-header">
+                    <view class="order-id">订单编号：{{item.orderId}}</view>
+                    <view class="order-state">{{item.status}}</view>
+                </view>
+                <view class="order-image">
+                  <repeat for="{{item.image}}" key="index" index="index" item="item">
+                    <image id="commodity-img" src='{{item}}' style="margin-right:20rpx"/>
+                  </repeat>
+                </view>
+                <view class="order-price-button">
+                    <view class="order-state">共{{item.number}}个商品 合计：￥{{item.price}}</view>
+                    <van-button wx:if="{{buttonText!==''}}" type="default" size="small" style="margin-left:20rpx;"
+                    @tap.self="clickButton({{item}},{{index}})">{{buttonText}}</van-button>
+                </view>
+            </view>
+        </repeat>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import GLOBAL from '../../../../libs/GLOBAL'
+export default class index extends wepy.component {
+  components = {}
+  props = {
+    type: String,
+    toBeShipped: Array,
+    toBeReceived: Array,
+    toBeEvaluated: Array,
+    useFor: String
+  }
+  data = {
+    buttonText: '确认收货',
+    Shipped: [],
+    Received: [],
+    Evaluated: []
+  }
+  methods = {
+    clickButton(e, index) {
+      const orderInfo = e
+      console.log(orderInfo)
+      console.log(index)
+      wepy.request({
+        url: GLOBAL.url + '/order/update',
+        method: 'POST',
+        data: {
+          orderId: orderInfo.orderId,
+          status: '待评价'
+        },
+        success(res) {
+          wepy.showToast({
+            icon: 'success',
+            title: '确认收货成功！',
+            duration: 900
+          })
+          console.log(res)
+        }
+      })
+    }
+  }
+  computed = {
+    list() {
+      switch (this.type) {
+        case 'toBeShipped':
+          this.buttonText = ''
+          const _Shipped = this.toBeShipped
+          if (_Shipped === []) {
+            return false
+          } else {
+            console.log(_Shipped)
+            _Shipped.forEach((item, index) => {
+              if (!Array.isArray(item.image)) {
+                item.image = _Shipped[index].image.split(',')
+              }
+              // item.image.pop()
+            })
+          }
+          return _Shipped
+        case 'toBeReceived':
+          this.buttonText = '确认收货'
+          const _Received = this.toBeReceived
+          if (_Received === []) {
+            return false
+          } else {
+            _Received.forEach((item, index) => {
+              if (!Array.isArray(item.image)) {
+                item.image = _Received[index].image.split(',')
+              }
+              // item.image.pop()
+            })
+          }
+          return _Received
+        case 'toBeEvaluated':
+          this.buttonText = '去评价'
+          const _Evaluated = this.toBeEvaluated
+          if (_Evaluated === []) {
+            return false
+          } else {
+            _Evaluated.forEach((item, index) => {
+              if (!Array.isArray(item.image)) {
+                item.image = _Evaluated[index].image.split(',')
+              }
+              // item.image.pop()
+            })
+          }
+          return _Evaluated
+        default:
+          return false
+      }
+    }
+  }
+  events = {
+  }
+  onLoad () {
+    console.log('123')
+  }
+}
+</script>

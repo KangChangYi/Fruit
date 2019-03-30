@@ -30,18 +30,18 @@
 </style>
 <template>
   <view class="orderFunctionLayout">
-    <van-cell @tap="goToOrder" title="全部订单" value="查看全部订单" is-link></van-cell>
+    <van-cell @tap="goToOrder('0')" title="全部订单" value="查看全部订单" is-link></van-cell>
     <view class="order-layout">
-      <view @tap="goToOrder" class="icon-layout">
+      <view @tap="goToOrder('1')" class="icon-layout">
         <image src="../../../images/my/wait-pay.png" class="icon" />待付款
       </view>
-      <view @tap="goToOrder" class="icon-layout">
+      <view @tap="goToOrder('2')" class="icon-layout">
         <image src="../../../images/my/wait-get.png" class="icon" />待发货
       </view>
-      <view @tap="goToOrder" class="icon-layout">
+      <view @tap="goToOrder('3')" class="icon-layout">
         <image src="../../../images/my/wait-take.png" class="icon" style="width:55rpx;height:55rpx" />待收货
       </view>
-      <view @tap="goToOrder" class="icon-layout">
+      <view @tap="goToOrder('4')" class="icon-layout">
         <image src="../../../images/my/wait-evaluate.png" class="icon" style="width:55rpx;height:55rpx" />待评价
       </view>
     </view>
@@ -54,10 +54,8 @@
     config = {};
     components = {};
     methods = {
-      goToOrder() {
-        wepy.navigateTo({
-          url: 'order/order'
-        })
+      goToOrder(active) {
+        this.$emit('goToOrderPage', active)
       }
     };
     data = {};
