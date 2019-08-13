@@ -81,6 +81,6 @@
     data = {};
     computed = {};
     events = {};
-    onLoad() {}
+    onLoad() {};
   }
 </script>
